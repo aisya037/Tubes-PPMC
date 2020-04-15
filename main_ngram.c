@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-//#define N 3
+#include <time.h>
 #define char_max 250
 
 /*struct node{
@@ -15,6 +15,7 @@
 double N;
 FILE *file_ref;
 double n_random;
+int counter,j;
 struct data{
     char text[char_max];
     char next[20][char_max];
@@ -24,8 +25,15 @@ struct string{
   char teks[char_max];
 };
 
+void cetak(struct data *unique_array)
+{
+	printf("\n(cetak string)\n");
+	srand((unsigned)time(0));
+    printf("%s", (*(unique_array+rand()%30)).text);//print kata random dari unique_array[].text
+}
+
 bool isExist(char text[],struct data *array){
-  for(int i=0;i<2000;i++){
+  for(int i=0;i<counter;i++){
     if(strcmp(text,(*(array+i)).text)==0){
       return(true);
     }
@@ -33,8 +41,8 @@ bool isExist(char text[],struct data *array){
   return(false);
 }
 
-void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *unique_array){
-  int counter,j; //N itu input Ngram
+void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *unique_array){//struct string *next_array
+   //N itu input Ngram
   char str[char_max];
   char temp[char_max];
   char next_temp[char_max];
@@ -49,30 +57,46 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
       //printf("elemen ke %d : %s\n", counter,(*(trans_array+counter)).teks);
       counter+=1;
   }
-
+  printf("elemen ke 0 : %s\n",(*(trans_array+4)).teks);
   //masukkin unique combo ke array
   j =0;
   int h =0;
-  while((j - N < counter)) {
+  //printf("1\n");
+  while((j - N < counter)&&(counter-j>N)) {
     strcpy(temp, (*(trans_array+j)).teks);
     for(int k= 1;k<N;k++){
       strcat(strcat(temp," "),(*(trans_array+(j+k))).teks);
       strcpy(next_temp,(*(trans_array+(j+k+1))).teks);
     }
-    
+    //printf("2\n");
     if(isExist(temp,unique_array)==false){
       strcpy((*(unique_array+h)).text,temp);
-      //strcpy(next_temp,tempat nyimpen next word di data pattern)
-      printf("elemen ke %d : %s\n",h, unique_array[h].text);
-      printf("%s\n",next_temp);
+      strcpy((*(unique_array+h)).next[0],next_temp);
+      //strcpy((*(next_array+h)).teks,next_temp);
+      //printf("%s\n",(*(next_array+h)).teks);
+      //printf("%s\n",(*(unique_array+h)).next[0]);
+      //printf("3\n");
       h+=1;
     }
-    //kalau dia udah pernah ada
-    //bikin program untuk looping si tempat penyimpanan next_word dari pattern yang bersangkutan
-    //terus taruh di setelahnya
+    else{
+      //printf("4\n");
+      for(int z=0;z<(counter+1);z++){
+        if(strcmp(temp,(*(unique_array+z)).text)==0){
+          int k = 0;
+          while(strcmp(next_temp,(*(unique_array+z)).next[k])==0){
+            k+=1;
+          }
+          strcpy((*(unique_array+z)).next[k+1],next_temp);
+          printf("%d elemen ke %d : %s\n",z,(k+1),(*(unique_array+z)).next[k+1]);
+        }
+      }
+      //printf("5\n");
+    }
     j+=1;
   }
   printf("%s\n",(*(unique_array+0)).text);
+  printf("%s\n",(*(unique_array+0)).next[0]);
+  printf("%s\n",(*(unique_array+0)).next[1]);
   fclose(fp);
 }
 
@@ -85,9 +109,11 @@ void menu(){
 void main(){
   struct data* unique_array;
   struct string* trans_array;
+  struct string* next_array;
   char namaFile[30];
   unique_array = (struct data*)malloc(100000*sizeof(struct data));
   trans_array= (struct string*)malloc(100000*sizeof(struct string));
+  next_array= (struct string*)malloc(100000*sizeof(struct string));
   char temp[char_max];
   char isLoop, isLoop2;
 
@@ -99,11 +125,11 @@ void main(){
   do{
     printf("Masukkan nilai N: ");
     scanf("%lf", &N);
-    if(N<2){
+    if(N<=2){
         printf("Nilai N tidak valid!\n");
     }
-  }while(N<2);
+  }while(N<=2);
 
-  pemecah_kata(N,file_ref,trans_array,unique_array);
+  pemecah_kata(N,file_ref,trans_array,unique_array);//next_array
   
 }
