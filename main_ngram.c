@@ -72,10 +72,6 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
     if(isExist(temp,unique_array)==false){
       strcpy((*(unique_array+h)).text,temp);
       strcpy((*(unique_array+h)).next[0],next_temp);
-      //strcpy((*(next_array+h)).teks,next_temp);
-      //printf("%s\n",(*(next_array+h)).teks);
-      //printf("%s\n",(*(unique_array+h)).next[0]);
-      //printf("3\n");
       h+=1;
     }
     else{
@@ -94,6 +90,7 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
     }
     j+=1;
   }
+	//inicuma buat testing
   printf("%s\n",(*(unique_array+0)).text);
   printf("%s\n",(*(unique_array+0)).next[0]);
   printf("%s\n",(*(unique_array+0)).next[1]);
