@@ -42,6 +42,17 @@ bool isExist(char text[],struct data *array){
   return(false);
 }
 
+bool isNext_Exist(char text[],struct data *array){
+  for(int i=0;i<counter;i++){
+    for(int k=0; k<20;k++){
+      if(strcmp(text,(*(array+i)).next[k])==0){
+        return(true);
+      }
+    }
+  }
+  return(false);
+}
+
 void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *unique_array){//struct string *next_array
    //N itu input Ngram
   char str[char_max];
@@ -80,14 +91,13 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
       //printf("4\n");
       for(int z=0;z<(counter+1);z++){
         if(strcmp(temp,(*(unique_array+z)).text)==0){
-          int k = 0;
-          while(strcmp(next_temp,(*(unique_array+z)).next[k])==0){
-            k+=1;
+          if(isNext_Exist(next_temp,unique_array)==false){
+            //kalo ga sama
+            strcpy((*(unique_array+z)).next[(*(unique_array+z)).next_count],next_temp);
+            (*(unique_array+z)).next_count += 1;
+            //printf("%d elemen ke %d : %s\n",z,(k+1),(*(unique_array+z)).next[k+1]);
           }
-          strcpy((*(unique_array+z)).next[k+1],next_temp);
-          (*(unique_array+z)).id_count += 1;
-          printf("%d elemen ke %d : %s\n",z,(k+1),(*(unique_array+z)).next[k+1]);
-          printf("%d elemen ke %d : %d\n",z,(k+1),(*(unique_array+z)).id_count);
+          printf("%d elemen ke : %d\n",z,(*(unique_array+z)).next_count);
         }
       }
       //printf("5\n");
