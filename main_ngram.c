@@ -11,11 +11,11 @@
   char word[char_max];
   struct node* next;
 };*/
-
 double N;
+unsigned int n_random;
 FILE *file_ref;
-double n_random;
 int counter,j;
+
 struct data{
     char text[char_max];
     char next[20][char_max];
@@ -53,14 +53,12 @@ bool isNext_Exist(char text[],struct data *array){
   return(false);
 }
 
-void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *unique_array){//struct string *next_array
-   //N itu input Ngram
+
+void pemecah_kata(double N, FILE *fp, struct string *trans_array,struct data *unique_array){//struct string *next_array
   char str[char_max];
   char temp[char_max];
   char next_temp[char_max];
-  if(fp == NULL) {
-      printf("Error opening file");
-  }
+
   counter=0;
 
   //tester masuk array total
@@ -93,11 +91,11 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
         if(strcmp(temp,(*(unique_array+z)).text)==0){
           if(isNext_Exist(next_temp,unique_array)==false){
             //kalo ga sama
-            strcpy((*(unique_array+z)).next[(*(unique_array+z)).next_count],next_temp);
-            (*(unique_array+z)).next_count += 1;
+            strcpy((*(unique_array+z)).next[(*(unique_array+z)).id_count],next_temp);
+            (*(unique_array+z)).id_count += 1;
             //printf("%d elemen ke %d : %s\n",z,(k+1),(*(unique_array+z)).next[k+1]);
           }
-          printf("%d elemen ke : %d\n",z,(*(unique_array+z)).next_count);
+          printf("%d elemen ke : %d\n",z,(*(unique_array+z)).id_count);
         }
       }
       //printf("5\n");
@@ -118,7 +116,7 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
 void tabelngram(struct data *unique_array){
     int i=0, next_count = -1; char value[99];
     printf("\t\t\t***Tabel n gram***\n\n");
-    printf("%200s%20.200s\n","KEY","VALUE");
+    printf("%200s%25.200s\n","KEY","VALUE");
 
     while (next_count != 0) {
         next_count = (*(unique_array+i)).id_count;
@@ -131,10 +129,10 @@ void tabelngram(struct data *unique_array){
                     strcat(value, ((*(unique_array+i)).next[j]));
             }
             strcat(value, "}");
-            printf("%200s%20.200s\n",((*(unique_array+i)).text), value);
+            printf("%200s%25.200s\n",((*(unique_array+i)).text), value);
 
         }else{
-            printf("%200s%20.200s\n",((*(unique_array+i)).text),((*(unique_array+i)).next[0]));
+            printf("%200s%25.200s\n",((*(unique_array+i)).text),((*(unique_array+i)).next[0]));
         }
         i+=1;
     }
@@ -158,20 +156,47 @@ void main(){
   char temp[char_max];
   char isLoop, isLoop2;
 
-  menu();
-  printf("Nama file referensi: ");
-  scanf("%s", &namaFile);
-  file_ref = fopen(namaFile,"r");
+   menu();
+    do{
+    //input
+     do {
+        printf("Nama file referensi: ");
+        scanf("%s", &namaFile);
+        file_ref = fopen(namaFile,"r");
 
-  do{
-    printf("Masukkan nilai N: ");
-    scanf("%lf", &N);
-    if(N < 3){
-        printf("Nilai N tidak valid!\n");
-    }
-  }while(N < 3);
+        if (!file_ref)
+            printf("File tidak ada!\n");
 
-  pemecah_kata(N,file_ref,trans_array,unique_array);
-  tabelngram(unique_array);
+    }while (!file_ref);
+
+    do {
+        printf("Masukkan nilai N: ");
+        scanf("%lf", &N);
+        if (N < 3)
+            printf("Nilai N tidak valid!\n");
+    } while (N < 3);
+
+    pemecah_kata(N,file_ref,trans_array,unique_array);
+    tabelngram(unique_array);
+
+    do {
+        printf("Masukkan jumlah kata random : ");
+        scanf("%u", &n_random);
+        if(n_random <2000)
+            printf("Nilai tidak valid!\n");
+        else{
+
+            cetak(unique_array);
+            printf("\nMasih ingin memasukkan n random?[Y/N]: ");
+            scanf("%s", &isLoop2);}
+
+    }while (n_random < 2000 || isLoop2 == 'Y');
+
+    printf("\nMasih ingin memasukkan nama file?[Y/N]: ");
+    scanf("%s", &isLoop);
+
+
+    }while (isLoop == 'Y');
+    return 0;
+
 }
-
