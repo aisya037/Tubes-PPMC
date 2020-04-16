@@ -117,6 +117,7 @@ void tabelngram(double n, FILE *fp, struct string *trans_array,struct data *uniq
     }
 }
 
+
 void menu(){
     printf("===PROGRAM N-GRAM===\n\n");
     printf("Sekilas tentang n-gram : \n");
