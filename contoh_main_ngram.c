@@ -101,6 +101,22 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
   fclose(fp);
 }
 
+void tabelngram(double n, FILE *fp, struct string *trans_array,struct data *unique_array){
+    double N;
+    printf("\t\t***Tabel n gram***\n\n");
+    printf("\t\t%3s%12s\n","KEY","VALUE");
+    i=0;
+    while(unique_array+1){
+        if (next_count>1){
+        	printf("\t\t%{200s%11}.{200s%11}\n",(*(unique_array+0)).text,(*(unique_array+0)).next[0]));
+        }
+	else {
+		printf("\t\t%200s%11.200s%11\n",(*(unique_array+0)).text,(*(unique_array+0)).next[0]));
+        i+=1;
+	}
+    }
+}
+
 void menu(){
     printf("===PROGRAM N-GRAM===\n\n");
     printf("Sekilas tentang n-gram : \n");
