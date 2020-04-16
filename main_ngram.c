@@ -19,6 +19,8 @@ int counter,j;
 struct data{
     char text[char_max];
     char next[20][char_max];
+    int id_count;
+
 };
 
 struct string{
@@ -72,6 +74,8 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
     if(isExist(temp,unique_array)==false){
       strcpy((*(unique_array+h)).text,temp);
       strcpy((*(unique_array+h)).next[0],next_temp);
+      (*(unique_array+h)).id_count = 1;
+
       h+=1;
     }
     else{
@@ -83,6 +87,9 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
             k+=1;
           }
           strcpy((*(unique_array+z)).next[k+1],next_temp);
+          (*(unique_array+z)).id_count += 1;
+          printf("%d elemen ke %d : %s\n",z,(k+1),(*(unique_array+z)).next[k+1]);
+          printf("%d elemen ke %d : %d\n",z,(k+1),(*(unique_array+z)).id_count);
           printf("%d elemen ke %d : %s\n",z,(k+1),(*(unique_array+z)).next[k+1]);
         }
       }
@@ -90,6 +97,10 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
     }
     j+=1;
   }
+  
+  printf("%s\n",(*(unique_array+0)).next[0]);
+  printf("%s\n",(*(unique_array+0)).next[1]);
+  printf("%d\n",(*(unique_array+0)).id_count);
 	//inicuma buat testing
   printf("%s\n",(*(unique_array+0)).text);
   printf("%s\n",(*(unique_array+0)).next[0]);
@@ -103,6 +114,7 @@ void menu(){
     printf("N-gram merupakan sebuah model yang digunakan untuk memprediksi kata berikutnya yang mungkin dari kata N-1 sebelumnya. \nN-gram menampilkan probabilitas kemungkinan pada kata selanjutnya yang mungkin dapat digunakan untuk melakukan kemungkinan penggabungan pada keseluruhan kalimat.\nSebuah string yang terdiri dari kata-kata acak akan dibuat dan program n-gram akan membuat string acak tersebut memiliki gaya penulisan manusia.\n\n");
 }
 
+
 void main(){
   struct data* unique_array;
   struct string* trans_array;
@@ -110,6 +122,7 @@ void main(){
   char namaFile[30];
   unique_array = (struct data*)malloc(100000*sizeof(struct data));
   trans_array= (struct string*)malloc(100000*sizeof(struct string));
+  next_array= (struct string*)malloc(100000*sizeof(struct string));//tester array
   next_array= (struct string*)malloc(100000*sizeof(struct string));
   char temp[char_max];
   char isLoop, isLoop2;
@@ -127,6 +140,11 @@ void main(){
     }
   }while(N<=2);
 
+  pemecah_kata(N,file_ref,trans_array,unique_array);
+
+  
+}
+=======
   pemecah_kata(N,file_ref,trans_array,unique_array);//next_array
   
 }
