@@ -20,6 +20,7 @@ struct data{
     char text[char_max];
     char next[20][char_max];
     int id_count;
+
 };
 
 struct string{
@@ -74,6 +75,7 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
       strcpy((*(unique_array+h)).text,temp);
       strcpy((*(unique_array+h)).next[0],next_temp);
       (*(unique_array+h)).id_count = 1;
+
       h+=1;
     }
     else{
@@ -88,6 +90,7 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
           (*(unique_array+z)).id_count += 1;
           printf("%d elemen ke %d : %s\n",z,(k+1),(*(unique_array+z)).next[k+1]);
           printf("%d elemen ke %d : %d\n",z,(k+1),(*(unique_array+z)).id_count);
+          printf("%d elemen ke %d : %s\n",z,(k+1),(*(unique_array+z)).next[k+1]);
         }
       }
       //printf("5\n");
@@ -98,6 +101,10 @@ void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *un
   printf("%s\n",(*(unique_array+0)).next[0]);
   printf("%s\n",(*(unique_array+0)).next[1]);
   printf("%d\n",(*(unique_array+0)).id_count);
+	//inicuma buat testing
+  printf("%s\n",(*(unique_array+0)).text);
+  printf("%s\n",(*(unique_array+0)).next[0]);
+  printf("%s\n",(*(unique_array+0)).next[1]);
   fclose(fp);
 }
 
@@ -116,6 +123,7 @@ void main(){
   unique_array = (struct data*)malloc(100000*sizeof(struct data));
   trans_array= (struct string*)malloc(100000*sizeof(struct string));
   next_array= (struct string*)malloc(100000*sizeof(struct string));//tester array
+  next_array= (struct string*)malloc(100000*sizeof(struct string));
   char temp[char_max];
   char isLoop, isLoop2;
 
@@ -134,5 +142,9 @@ void main(){
 
   pemecah_kata(N,file_ref,trans_array,unique_array);
 
+  
+}
+=======
+  pemecah_kata(N,file_ref,trans_array,unique_array);//next_array
   
 }
