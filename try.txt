@@ -1,5 +1,8 @@
 hello it's me i was wondering about how we used to be
 hello it's me i can you hear me This is a short input file composed of spaces and of letters.
+hello it's me i capek
+hello it's me i ini buat cek.
+
 It is also a file with end of line characters to help you to test
 your code and help you get started.
 Isn't this the best assignment for you to solve?
@@ -14,4 +17,6 @@ so
 
 
 sure.
+
+
 
