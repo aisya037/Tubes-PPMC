@@ -119,6 +119,7 @@ void tabelngram(struct data *unique_array){
 }
 
 void cetak_loop(char temp_print[],struct data *unique_array,double N){
+    srand((unsigned)time(0));
     char temp2[char_max];
     int rand_num3;
     int point = N+1;
@@ -128,11 +129,6 @@ void cetak_loop(char temp_print[],struct data *unique_array,double N){
           rand_num3=(rand()%(*(unique_array+z)).id_count);
           printf(" %s",(*(unique_array+z)).next[rand_num3]);
           strcat(strcat(temp_print," "),(*(unique_array+z)).next[rand_num3]);
-        }
-        else{
-          rand_num3=rand()%(h+1);
-          strcpy(temp_print,"a");
-          strcat(strcat(temp_print," "),(*(unique_array+rand_num3)).text);
         }
       }
       int count=0;
@@ -146,7 +142,6 @@ void cetak_loop(char temp_print[],struct data *unique_array,double N){
         j++;
       }//susun ke temporary, sisa kalimat tanpa kata pertama
       strcpy(temp_print,temp2);
-      printf(" %s", temp_print);
       point++;
     }
     printf("...");
