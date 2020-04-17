@@ -1,5 +1,3 @@
-/* Tubes PPMC N-gram*/
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -13,6 +11,13 @@ FILE *file_ref;
 int counter,j,h,k;
 char temp_print[char_max];
 
+double N;
+unsigned int n_random;
+FILE *file_ref;
+int counter,j;
+char temp_print[char_max];
+
+
 struct data{
     char text[char_max];
     char next[20][char_max];
@@ -22,7 +27,6 @@ struct data{
 struct string{
   char teks[char_max];
 };
-
 
 
 bool isExist(char text[],struct data *array){
@@ -45,7 +49,6 @@ bool isNext_Exist(char text[],struct data *array){
   return(false);
 }
 
-
 void pemecah_kata(double N, FILE *fp, struct string *trans_array,struct data *unique_array){//struct string *next_array
   char str[char_max];
   char temp[char_max];
@@ -56,7 +59,6 @@ void pemecah_kata(double N, FILE *fp, struct string *trans_array,struct data *un
   //tester masuk array total
   while( fscanf(fp, "%s", str) != EOF){
       strcpy((*(trans_array+counter)).teks,str);
-      //printf("elemen ke %d : %s\n", counter,(*(trans_array+counter)).teks);
       counter+=1;
   }
   printf("elemen ke 0 : %s\n",(*(trans_array+4)).teks);
@@ -116,10 +118,82 @@ void tabelngram(struct data *unique_array){
     }
 }
 
+void cetak_loop(char temp_print[],struct data *unique_array){
+    char temp2[char_max];
+    int rand_num3, h;
+    int point = (n_random-(N+1));
+    while(point!=0){
+      for(int z=0;z<(h+1);z++){
+        if(strcmp(temp_print,(*(unique_array+z)).text)==0){//kalo key sama
+          rand_num3=(rand()%(*(unique_array+z)).id_count);
+          printf(" %s",(*(unique_array+z)).next[rand_num3]);
+          strcat(strcat(temp_print," "),(*(unique_array+z)).next[rand_num3]);
+        }
+      }
+      int count=0;
+      while(temp_print[count]!=' '){
+        count++;
+      }
+      j=0;
+      //diatas ini tujuannya untuk tau space/batas kata pertama di mana
+      for(int i=(count+1);i<=strlen(temp_print);i++){
+        temp2[j]=temp_print[i];
+        j++;
+      }//susun ke temporary, sisa kalimat tanpa kata pertama
+      strcpy(temp_print,temp2);
+      point--;
+    }
+    printf("...");
+}
+
+void cetak(struct string *next_array, struct data *unique_array,char temp_print[]){
+  char temp[char_max];
+  int rand_num1, h;
+  rand_num1 = rand()%(h+1);//h di sini tuh Neff nya key di unique array, randomin key yang keluar
+  //printf("%s\n",(*(unique_array+rand_num1)).text);//untuk nge cek
+  strcpy(temp,(*(unique_array+rand_num1)).text);//taro di temp untuk dipotong aja, dipisah perkata
+  //ini untuk mecah dari 1 kalimat panjang jadi beberapa kata
+  j=0; int ctr=0;//counter operator
+  for(int i=0;i<=(strlen(temp));i++){
+    //jika ditemukan space atau null
+    if(temp[i]==' '||temp[i]=='\0'){
+      (*(next_array+ctr)).teks[j] = '\0';
+      ctr++;//untuk kata selanjutnya
+      j=0;
+    }
+    else{
+      (*(next_array+ctr)).teks[j] = temp[i]; //langsung disusun
+      j++;
+    }
+  }
+
+
+  //mulai proses cetak
+  printf("\n...");
+  printf("%s",(*(next_array+0)).teks);//cetak kata pertama dari key random yang udah dipisah
+
+  //print sisa kata dari key random yang udah dipisah
+  for(int i=1;i < ctr;i++){
+    printf(" %s",(*(next_array+i)).teks);
+  }
+  //untuk nyusun key selanjutnya, di mana kata pertama dari key sebelumnya dibuang
+  strcpy(temp_print,(*(next_array+1)).teks);
+  for(int i = 2;i<=(N-1);i++){
+    strcat(strcat(temp_print," "),(*(next_array+i)).teks);
+  }//nyatuin sama sisa kata dari key random sebelumnya yang udah dipisah
+    int rand_num2; //untuk random value dari key sebelumnya
+    rand_num2=(rand()%(*(unique_array+rand_num1)).id_count);
+    //langsung cetak value dari key pertama
+    printf(" %s",(*(unique_array+rand_num1)).next[rand_num2]);
+    //satuin sama word yang sebelumnya untuk membentuk key selanjutnya
+    strcat(strcat(temp_print," "),(*(unique_array+rand_num1)).next[rand_num2]);
+    cetak_loop(temp_print,unique_array);
+}
+
 void menu(){
     printf("===PROGRAM N-GRAM===\n\n");
     printf("Sekilas tentang n-gram : \n");
-    printf("N-gram merupakan sebuah model yang digunakan untuk memprediksi kata berikutnya yang mungkin dari kata N-1 sebelumnya. \nN-gram menampilkan probabilitas kemungkinan pada kata selanjutnya yang mungkin dapat digunakan untuk melakukan kemungkinan penggabungan pada keseluruhan kalimat.\nSebuah string yang terdiri dari kata-kata acak akan dibuat dan program n-gram akan membuat string acak tersebut memiliki gaya penulisan manusia.\n\n");
+    printf("N-gram merupakan sebuah model yang digunakan untuk memprediksi \nkata berikutnya yang mungkin dari kata N-1 sebelumnya. \nN-gram menampilkan probabilitas kemungkinan pada kata selanjutnya \nyang mungkin dapat digunakan untuk melakukan kemungkinan penggabungan pada keseluruhan kalimat.\nSebuah string yang terdiri dari kata-kata acak akan dibuat dan program n-gram akan membuat string acak tersebut memiliki gaya penulisan manusia.\n\n");
 }
 
 void cetak_loop(char temp_print[],struct data *unique_array){
@@ -192,7 +266,7 @@ void cetak(struct string *next_array, struct data *unique_array,char temp_print[
     cetak_loop(temp_print,unique_array);
 }
 
-void main(){
+int main(){
   struct data* unique_array;
   struct string* trans_array;
   struct string* next_array;
@@ -224,6 +298,7 @@ void main(){
     } while (N < 3);
 
     pemecah_kata(N,file_ref,trans_array,unique_array);
+    fclose(file_ref);
     tabelngram(unique_array);
 
     do {
@@ -233,7 +308,7 @@ void main(){
             printf("Nilai tidak valid!\n");
         else{
 
-            cetak(unique_array);
+            cetak(next_array,unique_array,temp_print);
             printf("\nMasih ingin memasukkan n random?[Y/N]: ");
             scanf("%s", &isLoop2);}
 
@@ -244,6 +319,8 @@ void main(){
 
 
     }while (isLoop == 'Y');
+
     return 0;
 
 }
+
