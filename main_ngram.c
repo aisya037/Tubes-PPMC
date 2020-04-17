@@ -7,7 +7,8 @@
 
 
 double N;
-unsigned int n_random;
+int h;
+unsigned int random_N;
 FILE *file_ref;
 int counter,j;
 char temp_print[char_max];
@@ -125,16 +126,27 @@ void tabelngram(struct data *unique_array){
     }
 }
 
-void cetak_loop(char temp_print[],struct data *unique_array){
+void cetak_loop(char temp_print[],struct data *unique_array,double N){
     char temp2[char_max];
-    int rand_num3, h;
-    int point = (n_random-(N+1));
-    while(point!=0){
+    int rand_num3;
+    int point = N+1;
+    //printf("\n %d", point);
+    //printf("\n %d", N);
+    //printf("\n %d", random_N);
+    while(point<random_N){
+      //printf("\n %d", point);
       for(int z=0;z<(h+1);z++){
         if(strcmp(temp_print,(*(unique_array+z)).text)==0){//kalo key sama
+          //printf("& %d &",(*(unique_array+z)).id_count);
           rand_num3=(rand()%(*(unique_array+z)).id_count);
           printf(" %s",(*(unique_array+z)).next[rand_num3]);
           strcat(strcat(temp_print," "),(*(unique_array+z)).next[rand_num3]);
+        }
+        else{
+          rand_num3=rand()%(h+1);
+          strcpy(temp_print,"a");
+          strcat(strcat(temp_print," "),(*(unique_array+rand_num3)).text);
+          //printf("& %s &",temp_print);
         }
       }
       int count=0;
@@ -148,14 +160,16 @@ void cetak_loop(char temp_print[],struct data *unique_array){
         j++;
       }//susun ke temporary, sisa kalimat tanpa kata pertama
       strcpy(temp_print,temp2);
-      point--;
+      printf(" %s", temp_print);
+      point++;
     }
     printf("...");
 }
 
-void cetak(struct string *next_array, struct data *unique_array,char temp_print[]){
+void cetak(struct string *next_array, struct data *unique_array,char temp_print[], double N){
+  srand((unsigned)time(0));
   char temp[char_max];
-  int rand_num1, h;
+  int rand_num1;
   rand_num1 = rand()%(h+1);//h di sini tuh Neff nya key di unique array, randomin key yang keluar
   //printf("%s\n",(*(unique_array+rand_num1)).text);//untuk nge cek
   strcpy(temp,(*(unique_array+rand_num1)).text);//taro di temp untuk dipotong aja, dipisah perkata
@@ -194,7 +208,7 @@ void cetak(struct string *next_array, struct data *unique_array,char temp_print[
     printf(" %s",(*(unique_array+rand_num1)).next[rand_num2]);
     //satuin sama word yang sebelumnya untuk membentuk key selanjutnya
     strcat(strcat(temp_print," "),(*(unique_array+rand_num1)).next[rand_num2]);
-    cetak_loop(temp_print,unique_array);
+    cetak_loop(temp_print,unique_array,N);
 }
 
 void menu(){
@@ -241,16 +255,16 @@ int main(){
 
     do {
         printf("Masukkan jumlah kata random : ");
-        scanf("%u", &n_random);
-        if(n_random <2000)
+        scanf("%u", &random_N);
+        if(random_N <2000)
             printf("Nilai tidak valid!\n");
         else{
 
-            cetak(next_array,unique_array,temp_print);
+            cetak(next_array,unique_array,temp_print,N);
             printf("\nMasih ingin memasukkan n random?[Y/N]: ");
             scanf("%s", &isLoop2);}
 
-    }while (n_random < 2000 || isLoop2 == 'Y');
+    }while (random_N < 2000 || isLoop2 == 'Y');
 
     printf("\nMasih ingin memasukkan nama file?[Y/N]: ");
     scanf("%s", &isLoop);
