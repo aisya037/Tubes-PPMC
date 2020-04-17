@@ -1,3 +1,13 @@
+/* EL2208 Praktikum Pemecahan Masalah dengan C 2019/2020
+* MODUL 9 – TUGAS BESAR
+* Kelompok : 4 (Rombongan E)
+* Hari dan Tanggal : Kamis, 17 April 2020
+* Asisten (NIM) : Ryan D. C. (13217018)
+* Nama File : main_ngram.c
+* Deskripsi : N-Grams
+*/
+
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
