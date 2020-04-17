@@ -7,11 +7,10 @@
 
 
 double N;
-unsigned int n_random;
 FILE *file_ref;
-int counter,j;
+unsigned int n_random;
+int counter,j, h, k;
 char temp_print[char_max];
-
 
 struct data{
     char text[char_max];
@@ -43,7 +42,7 @@ bool isNext_Exist(char text[],struct data *array){
   return(false);
 }
 
-void pemecah_kata(double N, FILE *fp, struct string *trans_array,struct data *unique_array){//struct string *next_array
+void pemecah_kata(double n, FILE *fp, struct string *trans_array,struct data *unique_array){//struct string *next_array
   char str[char_max];
   char temp[char_max];
   char next_temp[char_max];
@@ -51,13 +50,12 @@ void pemecah_kata(double N, FILE *fp, struct string *trans_array,struct data *un
   counter=0;
 
   //tester masuk array total
-  while( fscanf(fp, "%s", str) != EOF){
+  while(fscanf(fp, "%s", str) != EOF){
       strcpy((*(trans_array+counter)).teks,str);
       counter+=1;
   }
   //masukkin unique combo ke array
-  j =0;
-  int h =0;
+  j =0;h=0;k=0;
   while((j - N < counter)&&(counter-j>N)) {
     strcpy(temp, (*(trans_array+j)).teks);
     for(int k= 1;k<N;k++){
@@ -112,7 +110,7 @@ void tabelngram(struct data *unique_array){
 
 void cetak_loop(char temp_print[],struct data *unique_array,double N){
     char temp2[char_max];
-    int rand_num3, h;
+    int rand_num3;
     int point = N+1;
     while(point<n_random){
       for(int z=0;z<(h+1);z++){
@@ -147,7 +145,8 @@ void cetak_loop(char temp_print[],struct data *unique_array,double N){
 void cetak(struct string *next_array, struct data *unique_array,char temp_print[], double N){
   srand((unsigned)time(0));
   char temp[char_max];
-  int rand_num1, h;
+  int rand_num1;
+
   rand_num1 = rand()%(h+1);//h di sini tuh Neff nya key di unique array, randomin key yang keluar
   strcpy(temp,(*(unique_array+rand_num1)).text);//taro di temp untuk dipotong aja, dipisah perkata
   //ini untuk mecah dari 1 kalimat panjang jadi beberapa kata
@@ -200,12 +199,13 @@ int main(){
   struct string* trans_array;
   struct string* next_array;
   char namaFile[30];
+  char temp[char_max];
+
   unique_array = (struct data*)malloc(100000*sizeof(struct data));
   trans_array= (struct string*)malloc(100000*sizeof(struct string));
   next_array= (struct string*)malloc(100000*sizeof(struct string));//tester array
-  char temp[char_max];
-  char isLoop, isLoop2;
 
+  char isLoop, isLoop2;
    menu();
     do{
     //input
@@ -236,7 +236,7 @@ int main(){
         if(n_random <2000)
             printf("Nilai tidak valid!\n");
         else{
-            cetak(next_array,unique_array,temp_print, N);
+            cetak(next_array,unique_array,temp_print,N);
             printf("\nMasih ingin memasukkan n random?[Y/N]: ");
             scanf("%s", &isLoop2);}
         system("cls");
